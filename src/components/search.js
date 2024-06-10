@@ -1,11 +1,13 @@
 import React from "react";
+import axios from 'axios';
+
 
 class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             grandmaster: '',
-            res: {}
+            res: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -20,38 +22,43 @@ class Search extends React.Component {
     }
 
     handleSubmit(event) {
-        fetch('https://api.chess.com/pub/player/' + this.state.grandmaster).then(
-            function (response) {
-                console.log(response)
-                return response.json();
-            }
-        ).then(function (jsonData) {
-            console.log(jsonData)
-            return JSON.stringify(jsonData);
-        }
-        ).then(function (jsonStr) {
-            console.log(jsonStr)
-            this.setState({ res: jsonStr });
-        });
-        event.preventDefault();
 
+        axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
+            .then((res) => {
+                console.log(res.data);
+                
+                return res = true
+                
+
+            })
+
+        event.preventDefault();
 
     }
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Grandmaster Search:
-                    <input type="text" value={this.state.grandmaster} onChange={this.handleChange} name="grandmaster" />
-                </label>
-                <br />
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Grandmaster Search:
+                        <input type="text" value={this.state.grandmaster} onChange={this.handleChange} name="grandmaster" />
+                    </label>
+                    <br />
 
-                <label>
-                    Submit:
-                    <input type="submit" />
-                </label>
-            </form>
+                    <label>
+                        Submit:
+                        <input type="submit" />
+                    </label>
+                </form>
+
+
+                <div id="results">
+                        <h1>
+                            
+                        </h1>
+                </div>
+            </div>
         );
     }
 }
