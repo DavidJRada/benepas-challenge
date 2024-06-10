@@ -7,7 +7,8 @@ class Search extends React.Component {
         super(props);
         this.state = {
             grandmaster: '',
-            res: false
+            res: false,
+            player_id: ""
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -16,8 +17,9 @@ class Search extends React.Component {
 
     handleChange(evt) {
         const value = evt.target.value;
+        const noSpaceValue = value.replace(" ",'_');
         this.setState({
-            [evt.target.name]: value
+            [evt.target.name]: noSpaceValue
         });
     }
 
@@ -26,9 +28,11 @@ class Search extends React.Component {
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
             .then((res) => {
                 console.log(res.data);
-                
-                return res = true
-                
+
+                return this.setState({
+                    res: true,
+                    player_id: res.data.player_id
+                })
 
             })
 
@@ -54,11 +58,11 @@ class Search extends React.Component {
 
 
                 <div id="results">
-                        <h1>
-                            
-                        </h1>
+                    {this.state.res == true && <h3>
+                        User Id: {this.state.player_id}
+                    </h3>}
                 </div>
-            </div>
+            </div >
         );
     }
 }
