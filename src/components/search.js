@@ -32,13 +32,12 @@ class Search extends React.Component {
 
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
             .then((res) => {
-                if (res.data.player_id.length > 0) {
                     return this.setState({
                         res: true,
                         player_id: res.data.player_id
                     })
-                } else if (res.data.player_id.length <= 0) { return alert("Looks like this is not a valid username, please try again"); this.setState({res: false}) }
-            })  
+                })
+              
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04')
             .then((res) => {
                 let aprilGamesArray = res.data.games
