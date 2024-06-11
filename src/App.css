@@ -43,10 +43,9 @@ body {
 }
 
 #player_id {
-  margin-top: 10%;
+  margin-top: 10px;
 }
 
-#matches {
-  text-align: justify;
-  margin-left: 40%;
+table {
+  margin: 0 auto;
 }

@@ -32,12 +32,12 @@ class Search extends React.Component {
 
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
             .then((res) => {
-                    return this.setState({
-                        res: true,
-                        player_id: res.data.player_id
-                    })
+                return this.setState({
+                    res: true,
+                    player_id: res.data.player_id
                 })
-              
+            })
+
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04')
             .then((res) => {
                 let aprilGamesArray = res.data.games
@@ -78,19 +78,23 @@ class Search extends React.Component {
                 <div id="matches">
                     {this.state.res == true && <div>
                         <h3>Matches:</h3>
-
-                        {this.state.aprilGamesArray.map((game) => {
-                            if (this.state.grandmaster == game.black.username) {
-                                return <GameCard
-                                    username={game.white.username}
-                                    result={game.black.result} />
-                            } else if (this.state.grandmaster == game.white.username) {
-                                return <GameCard
-                                    username={game.black.username}
-                                    result={game.white.result} />
-                            }
-                        })}
-
+                        <table>
+                            <tr>
+                                <th>Opponents <br></br> Username</th>
+                                <th>Outcome</th>
+                            </tr>
+                            {this.state.aprilGamesArray.map((game) => {
+                                if (this.state.grandmaster == game.black.username) {
+                                    return <GameCard
+                                        username={game.white.username}
+                                        result={game.black.result} />
+                                } else if (this.state.grandmaster == game.white.username) {
+                                    return <GameCard
+                                        username={game.black.username}
+                                        result={game.white.result} />
+                                }
+                            })}
+                        </table>
 
                     </div>}
                 </div >
