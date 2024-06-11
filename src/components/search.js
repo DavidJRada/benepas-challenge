@@ -60,6 +60,7 @@ class Search extends React.Component {
                         <input type="text" value={this.state.grandmaster} onChange={this.handleChange} name="grandmaster" />
                     </label>
                     <br />
+                    <br />
 
                     <label>
                         Submit:
@@ -70,13 +71,13 @@ class Search extends React.Component {
 
                 <div id="player_id">
                     {this.state.res == true && <div>
-                        User Id: {this.state.player_id}
+                        <h3>User Id: {this.state.player_id}</h3>
                     </div>} </div>
                 <br></br>
 
                 <div id="matches">
-                    {this.state.aprilGamesArray.length > 0 != null && <div>
-                        Matches:
+                    {this.state.res == true && <div>
+                        <h3>Matches:</h3>
 
                         {this.state.aprilGamesArray.map((game) => {
                             if (this.state.grandmaster == game.black.username) {
