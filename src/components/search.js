@@ -23,7 +23,8 @@ class Search extends React.Component {
         const value = evt.target.value;
         const noSpaceValue = value.replace(" ", '_');
         this.setState({
-            [evt.target.name]: noSpaceValue
+            [evt.target.name]: noSpaceValue,
+            aprilGamesArray: []
         });
     }
 
@@ -31,19 +32,18 @@ class Search extends React.Component {
 
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
             .then((res) => {
-
-                 return this.setState({
-                    res: true,
-                    player_id: res.data.player_id
-                })
-
-            })
-
+                if (res.data.player_id.length > 0) {
+                    return this.setState({
+                        res: true,
+                        player_id: res.data.player_id
+                    })
+                } else if (res.data.player_id.length <= 0) { return alert("Looks like this is not a valid username, please try again"); this.setState({res: false}) }
+            })  
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04')
             .then((res) => {
                 let aprilGamesArray = res.data.games
-     
-               return this.setState({
+
+                return this.setState({
                     aprilGamesArray: aprilGamesArray,
                 })
             })
@@ -69,12 +69,16 @@ class Search extends React.Component {
                 </form>
 
 
-                <div id="results">
+                <div id="player_id">
                     {this.state.res == true && <div>
                         User Id: {this.state.player_id}
+                    </div>} </div>
+                <br></br>
 
-                        <br></br> Matches:
-                        
+                <div id="matches">
+                    {this.state.aprilGamesArray.length > 0 != null && <div>
+                        Matches:
+
                         {this.state.aprilGamesArray.map((game) => {
                             if (this.state.grandmaster == game.black.username) {
                                 return <GameCard
@@ -90,7 +94,7 @@ class Search extends React.Component {
 
                     </div>}
                 </div >
-            </div>
+            </div >
 
 
 
