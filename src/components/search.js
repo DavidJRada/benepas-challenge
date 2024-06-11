@@ -1,5 +1,7 @@
 import React from "react";
 import axios from 'axios';
+import { Card } from "react-bootstrap";
+import GameCard from "./gameCard.js";
 
 
 class Search extends React.Component {
@@ -8,7 +10,8 @@ class Search extends React.Component {
         this.state = {
             grandmaster: '',
             res: false,
-            player_id: ""
+            player_id: "",
+            aprilGamesArray: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -16,8 +19,9 @@ class Search extends React.Component {
     }
 
     handleChange(evt) {
+        evt.preventDefault();
         const value = evt.target.value;
-        const noSpaceValue = value.replace(" ",'_');
+        const noSpaceValue = value.replace(" ", '_');
         this.setState({
             [evt.target.name]: noSpaceValue
         });
@@ -27,13 +31,21 @@ class Search extends React.Component {
 
         axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
             .then((res) => {
-                console.log(res.data);
 
-                return this.setState({
+                 return this.setState({
                     res: true,
                     player_id: res.data.player_id
                 })
 
+            })
+
+        axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04')
+            .then((res) => {
+                let aprilGamesArray = res.data.games
+     
+               return this.setState({
+                    aprilGamesArray: aprilGamesArray,
+                })
             })
 
         event.preventDefault();
@@ -58,11 +70,30 @@ class Search extends React.Component {
 
 
                 <div id="results">
-                    {this.state.res == true && <h3>
+                    {this.state.res == true && <div>
                         User Id: {this.state.player_id}
-                    </h3>}
-                </div>
-            </div >
+
+                        <br></br> Matches:
+                        
+                        {this.state.aprilGamesArray.map((game) => {
+                            if (this.state.grandmaster == game.black.username) {
+                                return <GameCard
+                                    username={game.white.username}
+                                    result={game.black.result} />
+                            } else if (this.state.grandmaster == game.white.username) {
+                                return <GameCard
+                                    username={game.black.username}
+                                    result={game.white.result} />
+                            }
+                        })}
+
+
+                    </div>}
+                </div >
+            </div>
+
+
+
         );
     }
 }
