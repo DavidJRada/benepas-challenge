@@ -30,25 +30,44 @@ class Search extends React.Component {
 
     handleSubmit(event) {
 
-        axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
-            .then((res) => {
-                return this.setState({
+        event.preventDefault()
+        // axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster)
+        //     .then((res) => {
+        //         this.setState({
+        //             res: true,
+        //             player_id: res.data.player_id
+        //         })
+        //     })
+
+        // axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04')
+        //     .then((res) => {
+        //         let aprilGamesArray = res.data.games
+
+        //         return this.setState({
+        //             aprilGamesArray: aprilGamesArray,
+        //         })
+        //     }).catch(function(error){event.preventDefault()})
+
+        let urls = [
+            'https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04',
+            'https://api.chess.com/pub/player/' + this.state.grandmaster
+        ]
+        const requests = urls.map((url) => axios.get(url));
+        axios.all(requests).then((responses) => {
+            console.log(responses[0].data.games)
+            let player_id = responses[1].player_id
+            let aprilGamesArray = responses[0].data.games;
+            console.log(aprilGamesArray)
+            aprilGamesArray.forEach((game) => {
+
+                this.setState({
                     res: true,
-                    player_id: res.data.player_id
-                })
-            })
-
-        axios.get('https://api.chess.com/pub/player/' + this.state.grandmaster + '/games/2024/04')
-            .then((res) => {
-                let aprilGamesArray = res.data.games
-
-                return this.setState({
+                    player_id: player_id,
                     aprilGamesArray: aprilGamesArray,
                 })
-            })
-
-        event.preventDefault();
-
+            }
+            );
+        });
     }
 
     render() {
@@ -57,7 +76,7 @@ class Search extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Grandmaster Search:
-                        <input type="text" value={this.state.grandmaster} onChange={this.handleChange} name="grandmaster" />
+                        <input type="text" minLength={"1"} required value={this.state.grandmaster} onChange={this.handleChange} name="grandmaster" />
                     </label>
                     <br />
                     <br />
